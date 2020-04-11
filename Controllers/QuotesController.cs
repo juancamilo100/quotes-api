@@ -33,28 +33,37 @@ namespace QuotesApi.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public Quote Get(int id)
         {
-            return "value";
+            return quotesDbContext.Quotes.Find(id);
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]Quote value)
+        public void Post([FromBody]Quote quote)
         {
-            quotes.Add(value);
+            quotesDbContext.Quotes.Add(quote);
+            quotesDbContext.SaveChanges();
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]Quote quote)
         {
+            var foundQuote = quotesDbContext.Quotes.Find(id);
+            foundQuote.Author = quote.Author;
+            foundQuote.Description = quote.Description;
+            foundQuote.Title = quote.Title;
+            quotesDbContext.SaveChanges();
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            var foundQuote = quotesDbContext.Quotes.Find(id);
+            quotesDbContext.Remove(foundQuote);
+            quotesDbContext.SaveChanges();
         }
     }
 }
